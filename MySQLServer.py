@@ -1,4 +1,5 @@
-import mysql.connector
+# Creating the correct MySQLServer.py script file
+mysql_server_script = """import mysql.connector
 from mysql.connector import Error
 
 def create_database():
@@ -26,3 +27,10 @@ def create_database():
 
 if __name__ == "__main__":
     create_database()
+"""
+
+file_path = '/mnt/data/MySQLServer.py'
+with open(file_path, 'w') as file:
+    file.write(mysql_server_script)
+
+file_path
