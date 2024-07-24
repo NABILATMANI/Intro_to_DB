@@ -1,29 +1,35 @@
+# MySQLServer.py
 import mysql.connector
-from mysql.connector import Error
+from mysql.connector import errorcode
 
 def create_database():
-    connection = None
     try:
-        # Connect to MySQL server
-        connection = mysql.connector.connect(
-            host='localhost',
+        # Connect to the MySQL server
+        cnx = mysql.connector.connect(
             user='your_username',
-            password='your_password'
+            password='your_password',
+            host='localhost'
         )
-
-        if connection.is_connected():
-            cursor = connection.cursor()
-            # Create the database if it does not exist
-            cursor.execute("CREATE DATABASE IF NOT EXISTS alx_book_store")
-            print("Database 'alx_book_store' created successfully!")
-    
-    except Error as e:
-        print(f"Error while connecting to MySQL: {e}")
+        cursor = cnx.cursor()
+        
+        # Create the database
+        cursor.execute("CREATE DATABASE IF NOT EXISTS alx_book_store")
+        print("Database 'alx_book_store' created successfully!")
+        
+    except mysql.connector.Error as err:
+        # Handle errors
+        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+            print("Something is wrong with your user name or password")
+        elif err.errno == errorcode.ER_BAD_DB_ERROR:
+            print("Database does not exist")
+        else:
+            print(err)
     finally:
-        if connection is not None and connection.is_connected():
+        # Ensure the cursor and connection are closed
+        if cursor:
             cursor.close()
-            connection.close()
-            print("MySQL connection is closed")
+        if cnx:
+            cnx.close()
 
 if __name__ == "__main__":
     create_database()
