@@ -1,5 +1,4 @@
-# Creating the correct MySQLServer.py script file
-mysql_server_script = """import mysql.connector
+import mysql.connector
 from mysql.connector import Error
 
 def create_database():
@@ -20,17 +19,13 @@ def create_database():
     except Error as e:
         print(f"Error while connecting to MySQL: {e}")
     finally:
-        if connection.is_connected():
-            cursor.close()
-            connection.close()
-            print("MySQL connection is closed")
+        try:
+            if connection.is_connected():
+                cursor.close()
+                connection.close()
+                print("MySQL connection is closed")
+        except NameError:
+            print("MySQL connection was never established")
 
 if __name__ == "__main__":
     create_database()
-"""
-
-file_path = '/mnt/data/MySQLServer.py'
-with open(file_path, 'w') as file:
-    file.write(mysql_server_script)
-
-file_path
